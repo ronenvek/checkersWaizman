@@ -68,7 +68,6 @@ public class Board
                 game.gameOver = true;
                 game.winner = false;
             }
-
         }
         
         else{
@@ -93,8 +92,6 @@ public class Board
             }
         }
         game.legalMoves = moves;
-        
-        
 
     }
 
@@ -137,31 +134,35 @@ public class Board
 
     public static void makeMove(int i, int j, ref Game game) //make a move (checks if its legal)
     {
-        moveChecker(ref game, i, j, 0, 18, 0);
-        moveChecker(ref game, i, j, 1, 14, 0);
-        moveChecker(ref game, i, j, 2, -18, 0);
-        moveChecker(ref game, i, j, 3, -14, 0);
+        if (game.turn % 2 == 0)
+        {
+            moveChecker(ref game, i, j, 0, 18);
+            moveChecker(ref game, i, j, 1, 14);
+            moveChecker(ref game, i, j, 2, -18);
+            moveChecker(ref game, i, j, 3, -14);
 
-        moveChecker(ref game, i, j, 4, -18, 1);
-        moveChecker(ref game, i, j, 5, -14, 1);
-        moveChecker(ref game, i, j, 6, 18, 1);
-        moveChecker(ref game, i, j, 7, 14, 1);
+            moveChecker(ref game, i, j, 8, 9);
+            moveChecker(ref game, i, j, 9, 7);
+            moveChecker(ref game, i, j, 10, -9);
+            moveChecker(ref game, i, j, 11, -7);
+        }
+        else
+        {
+            moveChecker(ref game, i, j, 4, -18);
+            moveChecker(ref game, i, j, 5, -14);
+            moveChecker(ref game, i, j, 6, 18);
+            moveChecker(ref game, i, j, 7, 14);
 
-        moveChecker(ref game, i, j, 8, 9, 0);
-        moveChecker(ref game, i, j, 9, 7, 0);
-        moveChecker(ref game, i, j, 10, -9, 0);
-        moveChecker(ref game, i, j, 11, -7, 0);
-
-        moveChecker(ref game, i, j, 12, -9, 1);
-        moveChecker(ref game, i, j, 13, -7, 1);
-        moveChecker(ref game, i, j, 14, 9, 1);
-        moveChecker(ref game, i, j, 15, 7, 1);
-
+            moveChecker(ref game, i, j, 12, -9);
+            moveChecker(ref game, i, j, 13, -7);
+            moveChecker(ref game, i, j, 14, 9);
+            moveChecker(ref game, i, j, 15, 7);
+        }
     }
 
-    private static void moveChecker(ref Game game, int i, int j, int loc, int offset, int turn) 
+    private static void moveChecker(ref Game game, int i, int j, int loc, int offset) 
     {
-        if (isMovesArrayIndex(i, loc, game) && i + offset == j && game.turn % 2 == turn) //move is legal
+        if (isMovesArrayIndex(i, loc, game) && i + offset == j) //move is legal
             movePiece(i, j, offset >= 14 || offset <= -14, ref game);
     }
 

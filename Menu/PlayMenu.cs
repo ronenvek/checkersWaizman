@@ -51,7 +51,7 @@ public class PlayMenu : MonoBehaviour
 
     void Start()
     {
-        startColor = endColor = Color.white;
+        startColor = endColor = Color.white; //setup starting variables for animations
 
         target = startPos = eatSlider.transform.position;
         eatSliderOff = startPos;
@@ -65,15 +65,15 @@ public class PlayMenu : MonoBehaviour
 
     void Update()
     {
-        if (timeToSwitchSlider < 0)
+        if (timeToSwitchSlider < 0) //minimum time
             timeToSwitchSlider = 0.01f;
         if (timeToSwitchColor < 0)
             timeToSwitchColor = 0.01f;
 
         t += Time.deltaTime / timeToSwitchSlider;
-        tColor += Time.deltaTime / timeToSwitchColor;
-
-        colorBTN.image.color = Color.Lerp(startColor, endColor, tColor);
+        tColor += Time.deltaTime / timeToSwitchColor; //do animations
+         
+        colorBTN.image.color = Color.Lerp(startColor, endColor, tColor); 
 
         eatSlider.transform.position = Vector3.Lerp(startPos, target, t);
         eatSlider.color = Color.Lerp(startCirc, endCirc, t);
@@ -91,7 +91,7 @@ public class PlayMenu : MonoBehaviour
         if (!(colorBTN.image.color == Color.white || colorBTN.image.color == Color.black))
             return;
         color = !color;
-        if (color)
+        if (color) //setup animation
         {
             startColor = Color.white;
             endColor = Color.black;
@@ -110,7 +110,7 @@ public class PlayMenu : MonoBehaviour
         if (!(pos == eatSliderOff || pos == eatSliderOn))
             return;
         startPos = pos;
-        if (eat) {
+        if (eat) { //setup animation
             target = startPos - offset;
 
             startCirc = colorOnCircle;
