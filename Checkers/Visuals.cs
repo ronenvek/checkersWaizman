@@ -14,9 +14,13 @@ public class Visuals : MonoBehaviour
 
     private Main main;
 
-    Sprite circle;
-    Sprite rect;
-    Sprite crown;
+    public Sprite circle;
+    public Sprite rect;
+    public Sprite crown;
+    public Sprite hexagon;
+
+    public GameObject topTurn;
+    public GameObject bottomTurn;
 
     float height;
     float width;
@@ -24,10 +28,6 @@ public class Visuals : MonoBehaviour
     void Awake()
     {
         main = GetComponent<Main>();
-
-        rect = main.rect;
-        circle = main.circle;
-        crown = main.crown;
 
         Camera cam = Camera.main;
         height = cam.orthographicSize * 2f;
@@ -105,7 +105,7 @@ public class Visuals : MonoBehaviour
     {
         GameObject p = main.getPiece(i);
         SpriteRenderer r = Util.getRenderer(p);
-        r.sprite = main.hexagon;
+        r.sprite = hexagon;
         r.color = color;
         Util.localScale(p, ratio);
     }
@@ -113,6 +113,17 @@ public class Visuals : MonoBehaviour
 
     public void showBoard(Game game) //shows the pieces (need to change the name of the function)
     {
+        if (game.turn % 2 == 0)
+        {
+            Util.getRenderer(bottomTurn).color = Color.green;
+            Util.getRenderer(topTurn).color = Color.gray;
+        }
+        else
+        {
+            Util.getRenderer(bottomTurn).color = Color.gray;
+            Util.getRenderer(topTurn).color = Color.green;
+        }
+
         ulong m = 1;
         int k = 0;
         for (int i = 0; i < 8; i++)
@@ -156,7 +167,8 @@ public class Visuals : MonoBehaviour
             }
         }
 
-        if (main.held != -1){
+        if (main.held != -1)
+        {
             highlightLegalMoves(game, 0, 18, 0); //check if move is legal for held piece and highlight if it is
             highlightLegalMoves(game, 1, 14, 0);
             highlightLegalMoves(game, 2, -18, 0);
@@ -181,5 +193,7 @@ public class Visuals : MonoBehaviour
         if (Board.isMovesArrayIndex(main.held, loc, game) && game.turn % 2 == turn)
             highlight(main.held + offset, Color.red, pieceRatio * pieceRatio);
     }
+
+
 
 }

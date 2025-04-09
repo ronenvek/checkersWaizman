@@ -18,4 +18,9 @@ public class MainMenu : MonoBehaviour
         this.gameObject.active = false;
         startMenu.active = true;
     }
+
+    public void quitBTN()
+    {
+            Application.Quit();
+    }
 }

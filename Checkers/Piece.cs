@@ -16,7 +16,7 @@ public class Piece : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (main.game.gameOver)
+        if (main.game.gameOver || (main.info.diff != 0 && main.game.turn %2 != 0))
             return;
         string name = this.name; //when clicking on a piece, select the held to the piece's name (which is the location)
         main.held = i;

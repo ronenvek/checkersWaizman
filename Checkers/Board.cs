@@ -13,6 +13,8 @@ public class Board
         game.top = topStartNormal;
         game.bottom = bottomStartNormal;
 
+      //  game.top = 2097152;
+      //  game.bottom = 32;
     }
 
     public static char getPiece(int i, Game game) 
@@ -54,7 +56,8 @@ public class Board
             moves[2] = (bkings & 0xFCFCFCFCFCFCFCFC) & (game.top << 9) & (empty << 18);
             moves[3] = (bkings & 0x3F3F3F3F3F3F3F3F) & (game.top << 7) & (empty << 14);
 
-            if (!game.mustEat || Mathf.Max(moves[0], moves[1], moves[2], moves[3]) == 0)
+            game.canEat = (moves[0] | moves[1] | moves[2] | moves[3]) != 0;
+            if (!game.mustEat || !game.canEat)
             {
                 moves[8] = ((game.bottom & 0x7F7F7F7F7F7F7F7F)) & (empty >> 9);
                 moves[9] = ((game.bottom & 0xFEFEFEFEFEFEFEFE)) & (empty >> 7);
@@ -64,7 +67,6 @@ public class Board
 
             if (Mathf.Max(moves[0], moves[1], moves[2], moves[3], moves[8], moves[9], moves[10], moves[11]) == 0)
             {
-                Debug.Log("Top Won!");
                 game.gameOver = true;
                 game.winner = false;
             }
@@ -76,7 +78,8 @@ public class Board
             moves[6] = (tkings & 0x3F3F3F3F3F3F3F3F) & (game.bottom >> 9) & (empty >> 18);
             moves[7] = (tkings & 0xFCFCFCFCFCFCFCFC) & (game.bottom >> 7) & (empty >> 14);
 
-            if (!game.mustEat || Mathf.Max(moves[4], moves[5], moves[6], moves[7]) == 0)
+            game.canEat = (moves[4] | moves[5] | moves[6] | moves[7]) != 0;
+            if (!game.mustEat || !game.canEat)
             {
                 moves[12] = ((game.top & 0xFEFEFEFEFEFEFEFE)) & (empty << 9);
                 moves[13] = ((game.top & 0x7F7F7F7F7F7F7F7F)) & (empty << 7);
@@ -86,7 +89,6 @@ public class Board
             
             if (Mathf.Max(moves[4], moves[5], moves[6], moves[7], moves[12], moves[13], moves[14], moves[15]) == 0)
             {
-                Debug.Log("Bottom Won!");
                 game.gameOver = true;
                 game.winner = true;
             }
@@ -162,8 +164,9 @@ public class Board
 
     private static void moveChecker(ref Game game, int i, int j, int loc, int offset) 
     {
-        if (isMovesArrayIndex(i, loc, game) && i + offset == j) //move is legal
+        if (isMovesArrayIndex(i, loc, game) && i + offset == j) //move is not legal
             movePiece(i, j, offset >= 14 || offset <= -14, ref game);
+
     }
 
     public static bool isMovesArrayIndex(int i, int j, Game game) //check if piece has a legal move
@@ -188,11 +191,14 @@ public class Board
         
         if (eat)
         {
+            game.hasEaten = true;
             setPiece((j - i) / 2 + i, 'e', ref game); //remove eaten piece
             setKing((j - i) / 2 + i, false, ref game);
-            if (doubleCapture(j, ref game)) //check double capture
+            if (doubleCapture(j, ref game))//check double capture
+            {
+                game.turn += 2;
                 return; //return since we dont want to update the turn (give another turn to eat, and dont update legal moves)
-         
+            }
         }
         game.turn += 1;
         updateLegalMoves(ref game);

@@ -11,8 +11,10 @@ public class Game
 
     public bool gameOver = false;
     public bool winner;
+    public bool canEat = false;
+    public bool hasEaten = false;
 
-    public ulong[] legalMoves; 
+    public ulong[] legalMoves;
     //each location is for a different legal moves, if a bit is set to 1 then the piece there can do the move specified below
     //i can make it only be of size 8, might do that later on
 
@@ -36,4 +38,30 @@ public class Game
     // 13 -> top move 7 down
     // 14 -> top move 9 up kings
     // 15 -> top move 7 up kings
+    public Game()
+    {
+    }
+
+   public Game(Game g)
+    {
+        this.top = g.top;
+        this.bottom = g.bottom;
+        this.kings = g.kings;
+        this.turn = g.turn;
+        this.mustEat = g.mustEat;
+        this.gameOver = g.gameOver;
+        this.winner = g.winner;
+        this.legalMoves = new ulong[16];
+        g.legalMoves.CopyTo(this.legalMoves, 0);
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is Game)
+        {
+            Game g = (Game)obj;
+            return g.top == top && g.bottom == bottom && g.kings == kings && g.turn == turn;
+        }
+        return base.Equals(obj);
+    }
 }

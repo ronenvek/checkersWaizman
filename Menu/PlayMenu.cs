@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -82,8 +80,11 @@ public class PlayMenu : MonoBehaviour
     }
 
     public void updateDiff(float val)
-    {   
-        diff.text = val.ToString();
+    {
+        if (val == 1)
+            diff.text = "vs Player";
+        else
+            diff.text = (val-1).ToString();
     }
 
     public void setColorBTN()
@@ -133,7 +134,10 @@ public class PlayMenu : MonoBehaviour
 
     public void startGame()
     {
-        info.diff = int.Parse(diff.text);
+        if (diff.text.Equals("vs Player"))
+            info.diff = 0;
+        else
+            info.diff = int.Parse(diff.text);
         info.color = color;
         info.forcedEat = eat;
         SceneManager.LoadScene("Checkers");

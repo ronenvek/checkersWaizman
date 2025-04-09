@@ -35,4 +35,13 @@ public class Util
     {
         return i < 0 || i > 63;
     }
+
+    private static int[] bitCount = {0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4};
+
+    public static int count(ulong num)
+    {
+        if (num == 0)
+            return 0;
+        return bitCount[num & 15] + count(num >> 4);
+    }
 }
